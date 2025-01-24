@@ -2,9 +2,6 @@ package puzzletwo;
 
 public class PuzzleTwo {
 
-	public static int safe = 0;
-	static boolean unsafe = false;
-	public static int notsafe = 0;
 	static int dataToCheck[][] = {
 
 			{ 19, 21, 24, 27, 24 }, { 85, 87, 89, 92, 93, 96, 98, 98 }, { 2, 5, 6, 7, 8, 12 },
@@ -329,62 +326,65 @@ public class PuzzleTwo {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		for (int i = 0; i < dataToCheck.length; i++) {
-			checkDatacollection(dataToCheck[i]);
-			if (!(unsafe)) {
-				safe++;
-			}
-
-			System.out.println(safe);
-		}
-		System.out.println("Sicher = " + safe);
-
+		PuzzleTwo checkData = new PuzzleTwo();
+		
+		int safeReports = checkData.countSafeReports(dataToCheck);
+		System.out.println("Safe Locations: "+safeReports);
+		
 	}
+	
+	// Helper method: Check if a report is safe
+    public boolean isSafe(int[] report) {
+        int violations = 0;
 
-	public static void checkDatacollection(int[] dataCollection) {
-		notsafe = 0;
-		unsafe = false;
+        for (int i = 0; i < report.length - 1; i++) {
+            int diff = report[i + 1] - report[i];
+            if (Math.abs(diff) > 3 || diff == 0) {
+                violations++;
+                if (violations > 0) {
+                    return false; // Unsafe if any difference is invalid
+                }
+            }
+        }
+        return true; // Safe if no violations
+    }
 
-		for (int i = 0; i < (dataCollection.length - 1); i++) {
-			int check1 = dataCollection[i];
-			int check2 = dataCollection[i + 1];
-			int checkascend = (check2 - check1);
-			int checkdescend = (check1 - check2);
-			int ascending = 0;
-			int descending = 0;
+    // Helper method: Check if a report is safe after removing one level
+    public boolean isSafeWithRemoval(int[] report) {
+        // Check if the report is already safe
+        if (isSafe(report)) {
+            return true;
+        }
 
-			if (notsafe == 2) {
-				unsafe = true;
-				break;
+        // Try removing each level one by one
+        for (int i = 0; i < report.length; i++) {
+            // Create a new array without the current level
+            int[] reducedReport = new int[report.length - 1];
+            for (int j = 0, k = 0; j < report.length; j++) {
+                if (j != i) {
+                    reducedReport[k++] = report[j];
+                }
+            }
 
-			} else if (checkascend > 3 || checkdescend > 3 || checkascend == 0) {
-				if (notsafe < 2) {
-					notsafe++;
-				} else {
-					unsafe = true;
-					break;
-				}
+            // Check if the reduced report is safe
+            if (isSafe(reducedReport)) {
+                return true; // Safe if removing this level makes the report valid
+            }
+        }
 
-			} else if (notsafe < 2) {
-				if (checkascend > 0) {
-					if (descending <= 1) {
-						ascending++;
-					} else {
-						unsafe = true;
-					}
+        return false; // Unsafe if no single removal makes it safe
+    }
 
-				}
+    // Main method: Count the number of safe reports
+    public int countSafeReports(int[][] reports) {
+        int safeCount = 0;
 
-			} else if (notsafe < 2) {
-				if (checkdescend > 0) {
-					if (ascending <= 1) {
-						descending++;
-					} else {
-						unsafe = true;
-					}
-				}
-			}
+        for (int[] report : reports) {
+            if (isSafeWithRemoval(report)) {
+                safeCount++;
+            }
+        }
 
-		}
-	}
+        return safeCount;
+    }
 }
