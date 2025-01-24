@@ -2,6 +2,9 @@ package puzzletwo;
 
 
 public class PuzzleTwo {
+	
+	public static int safe = 0;
+	static boolean unsafe =false;
 	static int dataToCheck[][] = {
 
 			{ 19, 21, 24, 27, 24 }, 
@@ -1007,51 +1010,52 @@ public class PuzzleTwo {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		checkData();
-
-	}
-
-	public static void checkData() {
-		int unsafetotal =0;
-		int unsafe =0;
-		for (int i=0;i<dataToCheck.length;i++) {
-
-			for (int j=0;j<(dataToCheck[i].length-1);j++) {
-				int check1 = dataToCheck[i][j];
-				int check2 = dataToCheck[i][(j+1)];
-				int ergebnis = (dataToCheck[i][j+1]-dataToCheck[i][j]);
-				int ergebnis2 = (dataToCheck[i][j]-dataToCheck[i][j+1]);
-				if (check1 < check2) {
-					System.out.println(ergebnis);
-					if (ergebnis > 3 || ergebnis == 0) {
-						unsafe++;
-						unsafetotal++;
-						unsafe =0;
-						break;
-						
-					}
-				}
-				if (check1 > check2) {
-					if (ergebnis2 >3 || ergebnis2 == 0) {
-						unsafe++;
-						unsafetotal++;
-						unsafe =0;
-						break;
-						
-					}
-				}
-				if (unsafe == (dataToCheck[j].length)-1) {
-					unsafetotal++;
-					unsafe =0;
-					
-				}
+		
+		
+		for (int i =0; i<dataToCheck.length;i++) {
+			checkDatacollection(dataToCheck[i]);
+			if (!(unsafe)) {
+				safe++;
 			}
+			System.out.println(safe);
 		}
-		System.out.println("Unsafe: "+unsafetotal);
-		System.out.println("Safe: "+(dataToCheck.length-unsafetotal));
+		System.out.println("Sicher = "+safe);
 		
 		
 
 	}
 
+	public static void checkDatacollection(int[] dataCollection) {
+		unsafe =false;
+		boolean increase =false;
+		boolean decrease =false;
+		for (int i =0;i<(dataCollection.length-1);i++) {
+			int check1 = dataCollection[i];
+			int check2 = dataCollection[i+1];
+			
+			if (check1 < check2) {
+				increase=true;
+				
+				if ((check2-check1)>3||(increase && decrease)) {
+					System.out.println("Unsafe: "+(check2-check1));
+					unsafe =true;
+					break;
+					}
+				} else if (check1>check2) {
+					decrease=true;
+					if ((check1-check2)>3||(increase && decrease)){
+						System.out.println("Unsafe: "+(check1-check2));
+						unsafe =true;
+						break;
+						}
+					} else if (check1==check2) {
+						System.out.println("Unsafe: "+(check1-check2));
+						unsafe =true;
+						break;
+						}
+			}
+		
+		
+	}
+		
 }
