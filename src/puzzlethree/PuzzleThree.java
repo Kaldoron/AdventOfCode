@@ -26,7 +26,8 @@ public class PuzzleThree {
         while (matcher.find()) {
             int x = Integer.parseInt(matcher.group(1)); // Die Zahl vor dem Komma
             int y = Integer.parseInt(matcher.group(2)); // Die Zahl nach dem Komma
-            gesamtSumme += (x+y);
+            gesamtSumme += (x*y);
+            System.out.println("Gefunden: "+x+" "+y);
             System.out.println(gesamtSumme);
         }
 
