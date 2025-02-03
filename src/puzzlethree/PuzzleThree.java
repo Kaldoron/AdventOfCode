@@ -16,11 +16,18 @@ public class PuzzleThree {
 
 	public static void main(String[] args) {
 		String regex = "mul\\((\\d*),(\\d*)\\)";
+		String regex2 = "don't\\(\\).*?mul\\((\\d*),(\\d*)\\).*?do\\(\\)";
 
         // Kompiliere den Regex
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         int gesamtSumme = 0;
+        
+        Pattern pattern2 = Pattern.compile(regex2);
+        Matcher matcher2 = pattern2.matcher(input);
+        int gesamtSumme2 = 0;
+        
+        
 
         // Suche nach allen Vorkommen
         while (matcher.find()) {
@@ -28,8 +35,18 @@ public class PuzzleThree {
             int y = Integer.parseInt(matcher.group(2)); // Die Zahl nach dem Komma
             gesamtSumme += (x*y);
             System.out.println("Gefunden: "+x+" "+y);
+            System.out.println(matcher);
             System.out.println(gesamtSumme);
         }
+        while (matcher2.find()) {
+            int x = Integer.parseInt(matcher2.group(1)); // Die Zahl vor dem Komma
+            int y = Integer.parseInt(matcher2.group(2)); // Die Zahl nach dem Komma
+            gesamtSumme -= (x*y);
+            System.out.println("Defekte Gefunden: "+x+" "+y);
+            System.out.println(matcher2);
+            System.out.println(gesamtSumme);
+        }
+        
 
 	}
 
